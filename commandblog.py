@@ -22,7 +22,7 @@ users = [
         "lastLoginAt": ""
     },
     {
-        "name": "steve",
+        "name": "stev",
         "password": "1234",
         "role": "normal"
     }
@@ -31,13 +31,24 @@ users = [
 
 def login():
     username = input("please input username: ")
+    password = input("please input password: ")
 
-    for user in users:
-        if user['name'] == username:
-            password = input("please input password: ")
-            if user['password'] != password:
-                return 'Wrong password'
-            user["lastLoginAt"] = datetime.datetime.now()
+    if not username:
+        print('please input username !!!')
+        return "please input username!!!"
+    if not password:
+        print('please input password !!!')
+        return "please input password!!!"
+    user = next((user for user in users if user["name"] == username), False)
+
+    if user == False:
+        print('No user with that username exists')
+        return 'No user with that username exists'
+
+    if user['password'] != password:
+        print('wrong password')
+        return "wrong password"
+    user["lastLoginAt"] = datetime.datetime.now()
 
     if user['role'] == "normal":
         userinput = input("1. create comment \n 2.Edit comment \n  3. logout ")
@@ -51,7 +62,8 @@ def login():
                     'created_by': username
                     }
             comments.append(data)
-            return comments
+            print(comments)
+            
 
         elif userinput == str("2"):
             comment_id = int(input('Enter comment id:'))
@@ -63,12 +75,12 @@ def login():
                 return "No comment found"
             edit = input("Enter your comment here:")
             comment["comment"] = edit
-            return comments
+            print(comments)
 
         else:
             login()
 
-    elif user['role'] == "moderator":
+    if user['role'] == "moderator":
         userinput = input(
             "1. create comment \n 2. edit comment \n 3. delete comment \n 4. logout \n ")
 
@@ -81,32 +93,41 @@ def login():
                     'created_by': username
                     }
             comments.append(data)
-            return comments
+            print(comments)
 
         elif userinput == str("2"):
             comment_id = int(input('Enter comment id:'))
             if not comment_id:
-                return "Enter comment id: "
+                print("Enter comment id: ")
             comment = next(
                 (comment for comment in comments if comment["comment_id"] == comment_id), False)
             if comment == False:
-                return "No comment found"
+                print("No comment found")
             edit = input("Enter your comment here:")
             comment["comment"] = edit
-            return comments
+            print(comments)
+       
         elif userinput == str("3"):
-            comment_id = int(input('Enter comment id'))
+            comment_id = int(input("Enter the comment id to delete:")) 
             if not comment_id:
-                return 'Enter comment id'
-            comment = next(
-                (comment for comment in comments if comment["comment_id"] == comment_id), False)
+                print('You must enter the comment id')
+            comment = next((comment for comment in comments if comment["comment_id"] == comment_id), False)
+
             if comment == False:
-                return "No comment found"
+                print('Comment not found!')
             comments.remove(comment)
-            return comments
+            print(comments)
 
         else:
             login()
 
 
-print(login())
+if __name__ == "__main__":
+
+    choice = 'y'
+
+    while choice is not 'n':
+
+        login()
+
+        choice = input('Continue?')
