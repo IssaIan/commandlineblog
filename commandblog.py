@@ -1,20 +1,26 @@
+import datetime
+
 comments = []
 users = [
     {
         "name": "kenn",
         "password": "1234",
-        "role": "admin"
+        "role": "admin",
+        "lastLoginAt": ""
+
     },
     {
         "name": "issa",
         "password": "1234",
-        "role": "moderator"
-    },    
+        "role": "moderator",
+        "lastLoginAt": ""
+    },
     {
         "name": "eric",
         "password": "1234",
-        "role": "normal"
-    },    
+        "role": "normal",
+        "lastLoginAt": ""
+    },
     {
         "name": "steve",
         "password": "1234",
@@ -22,22 +28,32 @@ users = [
     }
 ]
 
+def login():
+    username = input("please input username: ")
 
-class MyClass:
-    def __init__(self):
-        self.user = users  
-    
-    def login(self):
-        x = input("Enter your name.")
-        for user in users:
-            if user['name'] == x:
-                return user['password']
-            y = input('Enter your password: ')
-            if user['password'] == y:
-                print('You are now logged in!')
-            else:
-                print('wrong password!')
-            break
+    for user in users:
+        if user['name'] == username:
+            # return user['password']
+            password = input("please input password: ")
+            if user['password'] != password:
+                print('Wrong password')
+            user["lastLoginAt"] = datetime.datetime.now()
 
-myclass = MyClass()
-myclass.login()
+    if user['role'] == "normal":
+        userinput = input("1. create comment \n 2.Edit comment \n  3. logout ")
+        
+        if userinput == str("1"):
+            comment = input("Enter your comment:")
+        
+        data = {'comment_id': len(comments) +1,
+            'comment': comment,
+            'timestamp': datetime.datetime.now() ,
+            'created_by': username
+            }
+        comments.append(data)
+        return comments
+
+        
+
+
+print(login())
